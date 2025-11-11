@@ -1,10 +1,8 @@
 package net.smileycorp.magiadaemonica.common.data.prices;
 
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;
-import net.smileycorp.magiadaemonica.common.MagiaDaemonicaCapabilities;
 import net.smileycorp.magiadaemonica.common.PriceUtils;
 
 public class FlatHealthPrice implements Price {

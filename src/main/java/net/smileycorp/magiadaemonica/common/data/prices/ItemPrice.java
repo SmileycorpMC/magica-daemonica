@@ -2,7 +2,6 @@ package net.smileycorp.magiadaemonica.common.data.prices;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.TextComponentBase;
 import net.smileycorp.atlas.api.util.RecipeUtils;
 
