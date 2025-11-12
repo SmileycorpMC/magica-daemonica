@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.data;
+package net.smileycorp.magiadaemonica.common.trades;
 
 import java.util.Locale;
 

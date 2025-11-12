@@ -1,9 +1,9 @@
-package net.smileycorp.magiadaemonica.common.data.prices;
+package net.smileycorp.magiadaemonica.common.trades.prices;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;
-import net.smileycorp.magiadaemonica.common.PriceUtils;
+import net.smileycorp.magiadaemonica.common.TradeUtils;
 
 public class FlatHealthPrice implements Price {
 
@@ -15,7 +15,7 @@ public class FlatHealthPrice implements Price {
 
     @Override
     public void pay(EntityPlayer player, int tier) {
-        PriceUtils.addAttribute(player, SharedMonsterAttributes.MAX_HEALTH, amount);
+        TradeUtils.addCostAttribute(player, SharedMonsterAttributes.MAX_HEALTH, amount);
     }
 
     @Override

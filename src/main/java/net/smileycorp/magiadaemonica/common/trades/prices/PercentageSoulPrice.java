@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.data.prices;
+package net.smileycorp.magiadaemonica.common.trades.prices;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;

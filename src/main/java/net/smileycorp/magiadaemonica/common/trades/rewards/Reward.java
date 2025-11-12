@@ -1,8 +1,10 @@
-package net.smileycorp.magiadaemonica.common.data.rewards;
+package net.smileycorp.magiadaemonica.common.trades.rewards;
 
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.smileycorp.magiadaemonica.common.TradeUtils;
 
 public interface Reward {
 
@@ -16,6 +18,10 @@ public interface Reward {
             item.setNoPickupDelay();
             item.setOwner(player.getName());
         };
+    }
+
+    static Reward attributeModifier(IAttribute attribute, double value) {
+        return player -> TradeUtils.addBonusAttribute(player, attribute, value);
     }
 
 }
