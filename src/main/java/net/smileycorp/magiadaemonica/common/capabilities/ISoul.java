@@ -54,26 +54,26 @@ public interface ISoul {
 
     class Provider implements ICapabilitySerializable<NBTBase> {
 
-        protected ISoul instance = MagiaDaemonicaCapabilities.SOUL.getDefaultInstance();
+        protected ISoul instance = DaemonicaCapabilities.SOUL.getDefaultInstance();
 
         @Override
         public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-            return capability == MagiaDaemonicaCapabilities.SOUL;
+            return capability == DaemonicaCapabilities.SOUL;
         }
 
         @Override
         public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-            return capability == MagiaDaemonicaCapabilities.SOUL ? MagiaDaemonicaCapabilities.SOUL.cast(instance) : null;
+            return capability == DaemonicaCapabilities.SOUL ? DaemonicaCapabilities.SOUL.cast(instance) : null;
         }
 
         @Override
         public NBTBase serializeNBT() {
-            return MagiaDaemonicaCapabilities.SOUL.getStorage().writeNBT(MagiaDaemonicaCapabilities.SOUL, instance, null);
+            return DaemonicaCapabilities.SOUL.getStorage().writeNBT(DaemonicaCapabilities.SOUL, instance, null);
         }
 
         @Override
         public void deserializeNBT(NBTBase nbt) {
-            MagiaDaemonicaCapabilities.SOUL.getStorage().readNBT(MagiaDaemonicaCapabilities.SOUL, instance, null, nbt);
+            DaemonicaCapabilities.SOUL.getStorage().readNBT(DaemonicaCapabilities.SOUL, instance, null, nbt);
         }
 
     }

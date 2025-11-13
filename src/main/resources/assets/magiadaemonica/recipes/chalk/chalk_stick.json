@@ -1,0 +1,20 @@
+{
+  "group": "magiadaemonica:chalk",
+  "type": "minecraft:crafting_shaped",
+  "mirror": false,
+  "pattern": [
+    "M",
+	"M"
+  ],
+  "key": {
+    "M": {
+      "item": "magiadaemonica:chalk",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "magiadaemonica:chalk_stick",
+    "data": 0,
+    "count": 1
+  }
+}

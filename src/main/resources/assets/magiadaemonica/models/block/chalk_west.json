@@ -1,0 +1,16 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "magiadaemonica:blocks/chalk_line",
+        "line": "magiadaemonica:blocks/chalk_line"
+    },
+    "elements": [
+        {   "from": [ 0, 0.25, 6 ],
+            "to": [ 8, 0.25, 9 ],
+            "shade": false,
+            "faces": {
+                "up": { "uv": [ 0, 6, 8, 9], "texture": "#line", "tintindex": 0 }
+            }
+        }
+    ]
+}

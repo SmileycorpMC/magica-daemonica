@@ -33,7 +33,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 minecraft {
     mappings channel: 'snapshot', version: '20171003-1.12'
     
-    //accessTransformer = file('src/main/resources/META-INF/magia-daemonica_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/magia-daemonica_at.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -77,6 +77,8 @@ dependencies {
     implementation "org.spongepowered:mixin:0.8"
     implementation "io.github.llamalad7:mixinextras-common:0.4.1"
     implementation "curse.maven:atlas-463826:6981034"
+    implementation "curse.maven:jei-238222:4393461"
+    implementation "curse.maven:futuremc-310059:6162819"
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -91,7 +93,7 @@ jar {
             "Implementation-Vendor" :"smileycorp",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             "ForceLoadAsMod": true,
-            //"FMLAT": "hordes_at.cfg",
+            "FMLAT": "magia-daemonica_at.cfg",
             "FMLCorePluginContainsFMLMod": true,
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "MixinConfigs": "mixins.magiadaemonica.json"

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.magiadaemonica.client.ClientHandler;
-import net.smileycorp.magiadaemonica.common.capabilities.MagiaDaemonicaCapabilities;
+import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 
 public class SyncSoulMessage implements IMessage {
 
@@ -36,9 +36,9 @@ public class SyncSoulMessage implements IMessage {
 
     public static void send(EntityPlayerMP player) {
         System.out.println(player);
-        if (!player.hasCapability(MagiaDaemonicaCapabilities.SOUL ,null)) return;
-        System.out.println(player.getCapability(MagiaDaemonicaCapabilities.SOUL, null).getSoul());
-        PacketHandler.NETWORK_INSTANCE.sendTo(new SyncSoulMessage(player.getCapability(MagiaDaemonicaCapabilities.SOUL, null).getSoul()), player);
+        if (!player.hasCapability(DaemonicaCapabilities.SOUL ,null)) return;
+        System.out.println(player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul());
+        PacketHandler.NETWORK_INSTANCE.sendTo(new SyncSoulMessage(player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul()), player);
     }
 
 }

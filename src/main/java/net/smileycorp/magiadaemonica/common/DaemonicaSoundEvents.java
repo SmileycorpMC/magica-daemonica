@@ -5,7 +5,7 @@ import net.minecraft.util.SoundEvent;
 
 import java.util.Set;
 
-public class MagicaDaemonicaSoundEvents {
+public class DaemonicaSoundEvents {
     
     public static final Set<SoundEvent> SOUNDS = Sets.newHashSet();
 

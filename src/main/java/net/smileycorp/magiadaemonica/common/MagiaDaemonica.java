@@ -1,5 +1,6 @@
 package net.smileycorp.magiadaemonica.common;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -14,6 +15,8 @@ public class MagiaDaemonica {
 	
 	@SidedProxy(clientSide = Constants.CLIENT, serverSide = Constants.SERVER)
 	public static CommonProxy proxy;
+
+	public static final CreativeTabs CREATIVE_TAB = new DaemonicaTab();
 	
 	public MagiaDaemonica() {}
 	

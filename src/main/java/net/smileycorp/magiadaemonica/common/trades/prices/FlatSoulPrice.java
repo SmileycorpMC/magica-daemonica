@@ -3,7 +3,7 @@ package net.smileycorp.magiadaemonica.common.trades.prices;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentBase;
-import net.smileycorp.magiadaemonica.common.capabilities.MagiaDaemonicaCapabilities;
+import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 import net.smileycorp.magiadaemonica.common.network.SyncSoulMessage;
 
 public class FlatSoulPrice implements Price {
@@ -16,15 +16,15 @@ public class FlatSoulPrice implements Price {
 
     @Override
     public void pay(EntityPlayer player, int tier) {
-        if (!player.hasCapability(MagiaDaemonicaCapabilities.SOUL, null)) return;
-        player.getCapability(MagiaDaemonicaCapabilities.SOUL, null).consumeSoul(amount, true);
+        if (!player.hasCapability(DaemonicaCapabilities.SOUL, null)) return;
+        player.getCapability(DaemonicaCapabilities.SOUL, null).consumeSoul(amount, true);
         if (player instanceof EntityPlayerMP) SyncSoulMessage.send((EntityPlayerMP) player);
     }
 
     @Override
     public boolean canPay(EntityPlayer player, int tier) {
-        if (!player.hasCapability(MagiaDaemonicaCapabilities.SOUL, null)) return false;
-        return player.getCapability(MagiaDaemonicaCapabilities.SOUL, null).getSoul() >= amount;
+        if (!player.hasCapability(DaemonicaCapabilities.SOUL, null)) return false;
+        return player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul() >= amount;
     }
 
     @Override

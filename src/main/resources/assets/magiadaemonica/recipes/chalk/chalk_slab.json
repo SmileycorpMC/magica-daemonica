@@ -1,0 +1,19 @@
+{
+  "group": "magiadaemonica:chalk",
+  "type": "minecraft:crafting_shaped",
+  "mirror": false,
+  "pattern": [
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "magiadaemonica:chalk",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "magiadaemonica:chalk_slab",
+    "data": 0,
+    "count": 6
+  }
+}

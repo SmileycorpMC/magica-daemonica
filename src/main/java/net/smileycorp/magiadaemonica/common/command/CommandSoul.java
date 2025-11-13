@@ -7,10 +7,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.smileycorp.magiadaemonica.common.Constants;
+import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 import net.smileycorp.magiadaemonica.common.capabilities.ISoul;
-import net.smileycorp.magiadaemonica.common.capabilities.MagiaDaemonicaCapabilities;
 import net.smileycorp.magiadaemonica.common.network.SyncSoulMessage;
 
 import javax.annotation.Nullable;
@@ -41,8 +40,8 @@ public class CommandSoul extends CommandBase {
             try {
                 String command = args[1];
                 //:skull:
-                if (!player.hasCapability(MagiaDaemonicaCapabilities.SOUL, null)) return;
-                ISoul soul = player.getCapability(MagiaDaemonicaCapabilities.SOUL, null);
+                if (!player.hasCapability(DaemonicaCapabilities.SOUL, null)) return;
+                ISoul soul = player.getCapability(DaemonicaCapabilities.SOUL, null);
                 if (command.equals("get")) {
                     System.out.println(soul.getSoul());
                     notifyCommandListener(sender, this, "command." + Constants.MODID + ".soul.get.success", player.getDisplayName(), soul.getSoul());

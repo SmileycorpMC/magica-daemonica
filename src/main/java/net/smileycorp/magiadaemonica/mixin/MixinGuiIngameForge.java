@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.client.GuiIngameForge;
-import net.smileycorp.magiadaemonica.common.capabilities.MagiaDaemonicaCapabilities;
+import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -19,8 +19,8 @@ public class MixinGuiIngameForge {
         if (player == null) return false;
         if (player.world == null) return false;
         if (!player.world.isRemote) return false;
-        if (!player.hasCapability(MagiaDaemonicaCapabilities.SOUL, null)) return false;
-        return player.getCapability(MagiaDaemonicaCapabilities.SOUL, null).getSoul() <= 0;
+        if (!player.hasCapability(DaemonicaCapabilities.SOUL, null)) return false;
+        return player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul() <= 0;
     }
 
 }

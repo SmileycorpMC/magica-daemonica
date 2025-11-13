@@ -1,3 +1,11 @@
+itemGroup.magiadaemonica.tab=Magia Daemonica
+
+item.magiadaemonica.chalk_stick.name=Chalk Stick
+
+tile.magiadaemonica.chalk.name=Chalk
+tile.magiadaemonica.chalk_stairs.name=Chalk Stairs
+tile.magiadaemonica.ChalkSlab.name=Chalk Slab
+
 command.magiadaemonica.soul.get.success=%1$s has %2$s soul remaining.
 command.magiadaemonica.soul.change.success=Channged soul for %1$s from %2$s to %3$s.
 command.magiadaemonica.soul.failure=%1$s is not a recognized subcommand.
