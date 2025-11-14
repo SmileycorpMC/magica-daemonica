@@ -35,9 +35,7 @@ public class SyncSoulMessage implements IMessage {
     }
 
     public static void send(EntityPlayerMP player) {
-        System.out.println(player);
         if (!player.hasCapability(DaemonicaCapabilities.SOUL ,null)) return;
-        System.out.println(player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul());
         PacketHandler.NETWORK_INSTANCE.sendTo(new SyncSoulMessage(player.getCapability(DaemonicaCapabilities.SOUL, null).getSoul()), player);
     }
 

@@ -1,0 +1,26 @@
+{
+  "group": "minecraft:dye",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "string"
+    },
+    {
+      "item": "magiadaemonica:flower",
+      "data": 0
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "wax"
+    },
+    {
+      "item": "minecraft:dye",
+      "data": 1
+    }
+  ],
+  "result": {
+    "item": "magiadaemonica:scented_candle",
+    "count": 1
+  }
+}

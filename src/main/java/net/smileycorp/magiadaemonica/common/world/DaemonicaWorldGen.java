@@ -17,6 +17,7 @@ public class DaemonicaWorldGen implements IWorldGenerator {
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         genOre(DaemonicaBlocks.CHALK.getBase().getDefaultState(), WorldConfig.chalk, world, random, chunkX, chunkZ);
+        if (WorldConfig.lavenderSpawnChance > 0) genLavender(world, random, chunkX, chunkZ);
     }
 
     private void genOre(IBlockState block, WorldGenEntry entry, World world, Random rand, int chunkX, int chunkZ) {
@@ -31,6 +32,17 @@ public class DaemonicaWorldGen implements IWorldGenerator {
                 int z = chunkZ * 16 + rand.nextInt(16);
                 generator.generate(world, rand, new BlockPos(x, y, z));
             }
+        }
+    }
+
+    private void genLavender(World world, Random rand, int chunkX, int chunkZ) {
+        for (int dim : WorldConfig.lavenderDimensions) {
+            if (world.provider.getDimension() != dim) continue;
+            if (rand.nextInt(WorldConfig.lavenderSpawnChance) > 0) continue;
+            WorldGenFlowerPatch generator = new WorldGenFlowerPatch(DaemonicaBlocks.FLOWER.getDefaultState(), WorldConfig.lavenderMinSize, WorldConfig.lavenderMaxSize);
+            int x = chunkX * 16 + rand.nextInt(16);
+            int z = chunkZ * 16 + rand.nextInt(16);
+            generator.generate(world, rand, new BlockPos(x, world.getHeight(x, z), z));
         }
     }
 

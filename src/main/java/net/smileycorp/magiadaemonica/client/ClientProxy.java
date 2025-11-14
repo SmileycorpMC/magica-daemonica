@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smileycorp.atlas.api.block.BlockProperties;
+import net.smileycorp.atlas.api.client.MetaStateMapper;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.magiadaemonica.common.CommonProxy;
 import net.smileycorp.magiadaemonica.common.Constants;
@@ -38,7 +40,9 @@ public class ClientProxy extends CommonProxy {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		DaemonicaBlocks.CHALK.registerModels();
-		for (Item item : DaemonicaItems.ITEMS) if (item instanceof IMetaItem &! (item instanceof ItemBlock)) {
+		ModelLoader.setCustomStateMapper(DaemonicaBlocks.FLOWER, new MetaStateMapper());
+		for (Item item : DaemonicaItems.ITEMS) if (item instanceof IMetaItem &! (item instanceof ItemBlock &&
+				((BlockProperties)((ItemBlock) item).getBlock()).usesCustomItemHandler())) {
 			if (((IMetaItem) item).getMaxMeta() > 0) for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
 				ModelResourceLocation loc = new ModelResourceLocation(Constants.locStr(((IMetaItem) item).byMeta(i)));
 				ModelLoader.setCustomModelResourceLocation(item, i, loc);
@@ -48,6 +52,8 @@ public class ClientProxy extends CommonProxy {
 				ModelLoader.setCustomModelResourceLocation(item, 0, loc);
 			}
 		}
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DaemonicaBlocks.FLOWER), 0,
+				new ModelResourceLocation(Constants.locStr("lavender"), "inventory"));
 	}
 	
 }

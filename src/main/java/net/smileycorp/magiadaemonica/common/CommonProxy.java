@@ -1,5 +1,6 @@
 package net.smileycorp.magiadaemonica.common;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -12,8 +13,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.smileycorp.magiadaemonica.common.capabilities.ISoul;
 import net.smileycorp.magiadaemonica.common.command.CommandSoul;
+import net.smileycorp.magiadaemonica.common.items.DaemonicaItems;
 import net.smileycorp.magiadaemonica.common.network.PacketHandler;
 import net.smileycorp.magiadaemonica.common.world.DaemonicaWorldGen;
 import net.smileycorp.magiadaemonica.config.WorldConfig;
@@ -44,7 +47,11 @@ public class CommonProxy {
 
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+		OreDictionary.registerOre("suet", new ItemStack(DaemonicaItems.MATERIAL, 1, 0));
+		OreDictionary.registerOre("tallow", new ItemStack(DaemonicaItems.MATERIAL, 1, 1));
+		OreDictionary.registerOre("wax", new ItemStack(DaemonicaItems.MATERIAL, 1, 1));
 		if (Loader.isModLoaded("futuremc")) FutureMCIntegration.registerRecipes();
+		GameRegistry.addSmelting(new ItemStack(DaemonicaItems.MATERIAL, 1, 0), new ItemStack(DaemonicaItems.MATERIAL, 1, 1), 0.1f);
 	}
 
 }

@@ -1,0 +1,15 @@
+{
+  "group": "minecraft:dye",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "magiadaemonica:flower",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "minecraft:dye",
+    "data": 5,
+    "count": 1
+  }
+}

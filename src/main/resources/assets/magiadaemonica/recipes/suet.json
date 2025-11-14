@@ -1,0 +1,15 @@
+{
+  "group": "magiadaemonica:suet",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:beef",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "magiadaemonica:food",
+    "data": 0,
+    "count": 1
+  }
+}

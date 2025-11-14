@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "magiadaemonica:scented_candle"
+  },
+  "variants": {
+    "normal": [{}],
+	"lit=false": [{}],
+	"lit=true": [{
+		"textures": {
+			"candle": "magiadaemonica:blocks/scented_candle_lit"
+		}
+	}]
+  }
+}

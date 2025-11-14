@@ -3,9 +3,10 @@
   "package": "net.smileycorp.magiadaemonica.mixin",
   "refmap": "mixins.magiadaemonica.refmap.json",
   "mixins": [
+      "MixinForgeEventFactory"
   ],
   "client": [
-    "MixinGuiIngameForge"
+      "MixinGuiIngameForge"
   ],
   "server": []
 }

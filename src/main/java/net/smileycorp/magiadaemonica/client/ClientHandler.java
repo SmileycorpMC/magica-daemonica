@@ -9,9 +9,7 @@ public class ClientHandler {
     public static void setSoul(float soul) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player == null) return;
-        System.out.println(player);
         if (!player.hasCapability(DaemonicaCapabilities.SOUL, null)) return;
-        System.out.println(soul);
         player.getCapability(DaemonicaCapabilities.SOUL, null).setSoul(soul);
     }
 

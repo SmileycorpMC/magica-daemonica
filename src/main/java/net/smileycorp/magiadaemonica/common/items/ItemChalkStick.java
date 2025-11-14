@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
 
-public class ItemChalkStick extends ItemDaemonicaFood {
+public class ItemChalkStick extends ItemDaemonicaEdible {
 
     public ItemChalkStick() {
         super("chalk_stick", 1, 0.2f);
