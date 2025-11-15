@@ -3,12 +3,17 @@ package net.smileycorp.magiadaemonica.common;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 import net.smileycorp.magiadaemonica.common.capabilities.ISoul;
 import net.smileycorp.magiadaemonica.common.network.SyncSoulMessage;
+import net.smileycorp.magiadaemonica.common.rituals.WorldDataRituals;
 
 public class DaemonicaEventHandler {
 
@@ -37,6 +42,15 @@ public class DaemonicaEventHandler {
 				original.getCapability(DaemonicaCapabilities.SOUL, null).getSoul());
 		if (!(player instanceof EntityPlayerMP)) return;
 		SyncSoulMessage.send((EntityPlayerMP) player);
+	}
+
+	@SubscribeEvent
+	public void startTrackingChunk(ChunkWatchEvent.Watch event) {
+		Chunk chunk = event.getChunkInstance();
+		if (chunk == null) return;
+		World world = chunk.getWorld();
+		if (!(world instanceof WorldServer)) return;
+		WorldDataRituals.get((WorldServer) world).syncRituals(chunk);
 	}
 	
 }

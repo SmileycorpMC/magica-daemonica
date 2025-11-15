@@ -12,18 +12,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.smileycorp.atlas.api.block.BlockBase;
 import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.MagiaDaemonica;
-import net.smileycorp.magiadaemonica.common.blocks.tiles.TileSummoningCircle;
 import net.smileycorp.magiadaemonica.common.items.DaemonicaItems;
+import net.smileycorp.magiadaemonica.common.rituals.WorldDataRituals;
 import net.smileycorp.magiadaemonica.common.rituals.summoningcircle.SummoningCircles;
 
 import java.util.Random;
@@ -62,25 +62,12 @@ public class BlockChalkLine extends BlockBase implements ILightable {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (world.isRemote) return;
-        if (state.getValue(ACTIVE)) {
-            TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof TileSummoningCircle) ((TileSummoningCircle) tile).breakRitual(pos);
-        }
+        if (state.getValue(ACTIVE)) WorldDataRituals.get((WorldServer) world).removeRitual(pos);
         if (state.getValue(CANDLE) == Candle.NONE) return;
         EntityItem entityitem = new EntityItem(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f,
                 new ItemStack(DaemonicaBlocks.SCENTED_CANDLE));
         entityitem.setDefaultPickupDelay();
         world.spawnEntity(entityitem);
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return state.getValue(ACTIVE) ? new TileSummoningCircle() : null;
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return state.getValue(ACTIVE);
     }
 
     @Override

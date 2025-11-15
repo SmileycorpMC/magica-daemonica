@@ -7,12 +7,10 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.atlas.api.block.ShapedBlock;
 import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.MagiaDaemonica;
-import net.smileycorp.magiadaemonica.common.blocks.tiles.TileSummoningCircle;
 
 import java.util.List;
 
@@ -34,7 +32,6 @@ public class DaemonicaBlocks {
         register(registry, FLOWER);
         register(registry, SCENTED_CANDLE);
         registry.register(CHALK_LINE);
-        GameRegistry.registerTileEntity(TileSummoningCircle.class, Constants.loc("summoning_circle"));
     }
 
     private static <T extends Block> void register(IForgeRegistry<Block> registry, T block) {

@@ -1,16 +1,21 @@
 package net.smileycorp.magiadaemonica.common.rituals.summoningcircle;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.blocks.BlockChalkLine;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
-import net.smileycorp.magiadaemonica.common.blocks.tiles.TileSummoningCircle;
+import net.smileycorp.magiadaemonica.common.rituals.IRitual;
 import net.smileycorp.magiadaemonica.common.rituals.Rotation;
 
-public class SummoningCircle {
+public class SummoningCircle implements IRitual {
+
+    public static final ResourceLocation ID = Constants.loc("summoning_circle");
 
     private final BlockPos pos;
     private final int width, height;
@@ -34,12 +39,19 @@ public class SummoningCircle {
                 IBlockState state = world.getBlockState(mutable);
                 if (state.getBlock() != DaemonicaBlocks.CHALK_LINE) continue;
                 world.setBlockState(mutable, state.withProperty(BlockChalkLine.ACTIVE, true));
-                TileSummoningCircle tile = (TileSummoningCircle) world.getTileEntity(mutable);
-                tile.setOrigin(pos, width, height);
-                if (!addedRenderer) {
-                    tile.setRenderProperties(name, facing, mirror);
-                    addedRenderer = true;
-                }
+            }
+        }
+    }
+
+    @Override
+    public void removeBlocks(World world) {
+        BlockPos.MutableBlockPos mutable;
+        for (int x = 0; x < width; x++) {
+            for (int z = 0; z < height; z++) {
+                mutable = new BlockPos.MutableBlockPos(pos.getX() + x, pos.getY(), pos.getZ() + z);
+                IBlockState state = world.getBlockState(mutable);
+                if (state.getBlock() != DaemonicaBlocks.CHALK_LINE) continue;
+                world.setBlockState(mutable, state.withProperty(BlockChalkLine.ACTIVE, false));
             }
         }
     }
@@ -49,7 +61,65 @@ public class SummoningCircle {
     }
 
     public void setFacing(Rotation rotation) {
-        facing = rotation.getFacing();
+        this.setFacing(rotation.getFacing());
+    }
+
+    public void setFacing(EnumFacing facing) {
+        this.facing = facing;
+    }
+
+    public ResourceLocation getName() {
+        return name;
+    }
+
+    @Override
+    public ResourceLocation getID() {
+        return ID;
+    }
+
+    @Override
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public EnumFacing getFacing() {
+        return facing;
+    }
+
+    @Override
+    public boolean isMirrored() {
+        return mirror;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setTag("pos", NBTUtil.createPosTag(pos));
+        nbt.setInteger("width", width);
+        nbt.setInteger("height", height);
+        nbt.setString("name", name.toString());
+        nbt.setByte("facing", (byte) facing.ordinal());
+        nbt.setBoolean("mirror", mirror);
+        return nbt;
+    }
+
+    public static SummoningCircle fromNBT(NBTTagCompound nbt) {
+        SummoningCircle circle = new SummoningCircle(NBTUtil.getPosFromTag(nbt.getCompoundTag("pos")),
+                nbt.getInteger("width"), nbt.getInteger("height"), new ResourceLocation(nbt.getString("name")));
+        circle.setFacing(EnumFacing.values()[nbt.getByte("facing")]);
+        if (nbt.getBoolean("mirror")) circle.mirror();
+        return circle;
     }
 
 }

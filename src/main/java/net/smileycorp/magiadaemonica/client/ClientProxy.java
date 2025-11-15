@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -15,11 +15,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.atlas.api.client.MetaStateMapper;
 import net.smileycorp.atlas.api.item.IMetaItem;
-import net.smileycorp.magiadaemonica.client.tesr.TESRSummoningCircle;
 import net.smileycorp.magiadaemonica.common.CommonProxy;
 import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
-import net.smileycorp.magiadaemonica.common.blocks.tiles.TileSummoningCircle;
 import net.smileycorp.magiadaemonica.common.items.DaemonicaItems;
 
 @EventBusSubscriber(value = Side.CLIENT, modid= Constants.MODID)
@@ -28,6 +26,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 	}
 	
 	@Override
@@ -57,7 +56,6 @@ public class ClientProxy extends CommonProxy {
 		}
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DaemonicaBlocks.FLOWER), 0,
 				new ModelResourceLocation(Constants.locStr("lavender"), "inventory"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSummoningCircle.class, new TESRSummoningCircle());
 	}
 	
 }

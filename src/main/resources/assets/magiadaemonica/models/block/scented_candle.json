@@ -45,6 +45,7 @@
 			}
 		}
 	],
+	"gui_light": "front",
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, 5.25, 1.5]
@@ -65,8 +66,8 @@
 			"scale": [0.75, 0.75, 0.75]
 		},
 		"gui": {
-			"translation": [0, 2, 0],
-			"scale": [1.25, 1.25, 0]
+			"translation": [0, 2, -2.25],
+			"scale": [1.25, 1.25, 1.25]
 		},
 		"head": {
 			"translation": [0, 14, 0]
