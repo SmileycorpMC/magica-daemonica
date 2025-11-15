@@ -22,7 +22,7 @@ public class TESRSummoningCircle extends TileEntitySpecialRenderer<TileSummoning
         BlockPos pos = te.getPos();
         int width = te.getWidth();
         int height = te.getHeight();
-        GlStateManager.translate(x + (origin.getX() - pos.getX()), y + 0.01, z + (origin.getZ() - pos.getZ()));
+        GlStateManager.translate(x + (origin.getX() - pos.getX()), y + 0.02, z + (origin.getZ() - pos.getZ()));
         switch (te.getFacing()) {
             case EAST:
                 GlStateManager.rotate(90, 0, 1, 0);
