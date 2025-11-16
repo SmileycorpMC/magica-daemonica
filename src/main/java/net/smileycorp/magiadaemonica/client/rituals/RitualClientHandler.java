@@ -14,7 +14,7 @@ import net.smileycorp.magiadaemonica.common.rituals.summoningcircle.SummoningCir
 import java.util.Map;
 import java.util.Set;
 
-public class RitualRendererDispatcher {
+public class RitualClientHandler {
 
     private static final Map<ResourceLocation, RitualRenderer> RENDERERS = Maps.newHashMap();
     private static final Map<BlockPos, IRitual> rituals = Maps.newHashMap();
@@ -61,10 +61,21 @@ public class RitualRendererDispatcher {
         int height = ritual.getHeight();
         BlockPos pos = ritual.getPos();
         GlStateManager.pushMatrix();
+        applyTransformations(ritual);
+        renderer.render(ritual, pos.getX() - TileEntityRendererDispatcher.staticPlayerX,
+                pos.getY() - TileEntityRendererDispatcher.staticPlayerY,
+                pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, width, height);
+        GlStateManager.popMatrix();
+    }
+
+    public static void applyTransformations(IRitual ritual) {
+        BlockPos pos = ritual.getPos();
+        int width = ritual.getWidth();
+        int height = ritual.getHeight();
         GlStateManager.translate(pos.getX() - TileEntityRendererDispatcher.staticPlayerX,
                 pos.getY() - TileEntityRendererDispatcher.staticPlayerY,
                 pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ);
-        switch (ritual.getFacing()) {
+        switch (ritual.getRotation()) {
             case EAST:
                 GlStateManager.rotate(90, 0, 1, 0);
                 GlStateManager.translate(-width, 0, 0);
@@ -78,8 +89,19 @@ public class RitualRendererDispatcher {
                 GlStateManager.translate(0, 0, -height);
                 break;
         }
-        renderer.render(ritual, width, height);
-        GlStateManager.popMatrix();
+    }
+
+    public static void clientTick() {
+        Set<BlockPos> toRemove = Sets.newHashSet();
+        WorldClient world = Minecraft.getMinecraft().world;
+        for (IRitual ritual : rituals.values()) {
+            if (!world.isBlockLoaded(ritual.getCenter())) {
+                toRemove.add(ritual.getCenter());
+                continue;
+            }
+            ritual.clientTick(world);
+        }
+        for (BlockPos pos : toRemove) rituals.remove(pos);
     }
 
 }

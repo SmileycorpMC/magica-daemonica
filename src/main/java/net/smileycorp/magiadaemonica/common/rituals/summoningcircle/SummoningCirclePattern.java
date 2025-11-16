@@ -54,13 +54,13 @@ public class SummoningCirclePattern {
             int[][] rotated = rotation.apply(pattern);
             SummoningCircle circle = checkMatch(world, pos, rotated);
             if (circle != null) {
-                circle.setFacing(rotation);
+                circle.setRotation(rotation);
                 return circle;
             }
             if (mirror) {
                 circle = checkMatch(world, pos, mirror(rotated));
                 if (circle != null) {
-                    circle.setFacing(rotation);
+                    circle.setRotation(rotation);
                     circle.mirror();
                     return circle;
                 }

@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 
-public class ClientHandler {
+public class NetworkClientHandler {
 
     public static void setSoul(float soul) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;

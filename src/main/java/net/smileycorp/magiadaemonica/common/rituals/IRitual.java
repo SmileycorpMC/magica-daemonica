@@ -1,5 +1,6 @@
 package net.smileycorp.magiadaemonica.common.rituals;
 
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -18,9 +19,11 @@ public interface IRitual {
 
     int getHeight();
 
-    EnumFacing getFacing();
+    Rotation getRotation();
 
     boolean isMirrored();
+
+    void clientTick(World world);
 
     default boolean contains(BlockPos pos) {
         BlockPos origin = getPos();

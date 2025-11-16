@@ -150,8 +150,13 @@ public class BlockChalkLine extends BlockBase implements ILightable {
     }
 
     @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return (state.getValue(ACTIVE)) ? EnumBlockRenderType.INVISIBLE : super.getRenderType(state);
+    }
+
+    @Override
     public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {
-        if (state.getValue(CANDLE) != Candle.LIT) return;
+        if (state.getValue(CANDLE) != Candle.LIT || state.getValue(ACTIVE)) return;
         world.spawnParticle(EnumParticleTypes.FLAME, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5, 0, 0, 0);
         if (rand.nextInt(4) == 0) world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.5 + (rand.nextFloat() - 0.5) * 0.05,
                 pos.getY() + 0.6, pos.getZ() + 0.5 + (rand.nextFloat() - 0.5) * 0.05, 0, 0, 0);

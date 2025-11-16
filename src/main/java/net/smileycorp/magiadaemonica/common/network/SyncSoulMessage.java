@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smileycorp.magiadaemonica.client.ClientHandler;
+import net.smileycorp.magiadaemonica.client.NetworkClientHandler;
 import net.smileycorp.magiadaemonica.common.capabilities.DaemonicaCapabilities;
 
 public class SyncSoulMessage implements IMessage {
@@ -30,7 +30,7 @@ public class SyncSoulMessage implements IMessage {
     }
 
     public IMessage process(MessageContext ctx) {
-        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.setSoul(soul));
+        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> NetworkClientHandler.setSoul(soul));
         return null;
     }
 
