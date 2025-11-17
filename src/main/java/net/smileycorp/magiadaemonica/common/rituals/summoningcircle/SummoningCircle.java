@@ -35,8 +35,6 @@ public class SummoningCircle implements IRitual {
         this.center = new Vec3d(pos.getX() + width  * 0.5f, pos.getY(), pos.getZ() + height  * 0.5f);
         this.name = name;
         this.candles = SummoningCircles.getCandles(name);
-        System.out.println(pos);
-        System.out.println(center);
     }
 
     public void setBlocks(World world) {
@@ -121,6 +119,9 @@ public class SummoningCircle implements IRitual {
         for (float[] candle : candles) {
             candle = rotation.apply(candle);
             if (mirror) for (int i = 0; i < 2; i++) candle[i] = -candle[i];
+            IBlockState state = world.getBlockState( new BlockPos(center.addVector(candle[0], 0, candle[1])));
+            if (state.getBlock() != DaemonicaBlocks.CHALK_LINE) continue;
+            if (state.getValue(BlockChalkLine.CANDLE) != BlockChalkLine.Candle.LIT) continue;
             world.spawnParticle(EnumParticleTypes.FLAME, center.x + candle[0], center.y + 0.6, center.z + candle[1], 0, 0, 0);
             if (rand.nextInt(4) == 0) world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, center.x + candle[0] + (rand.nextFloat() - 0.5) * 0.05,
                     center.y + 0.6,  center.z + candle[1] + (rand.nextFloat() - 0.5) * 0.05, 0, 0, 0);
