@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -43,12 +44,16 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         buffer.pos(width, 0.01, height).tex(1, 1).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
         buffer.pos(width, 0.01, 0).tex(1, 0).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
         tessellator.draw();
-
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
         //candles
         float offsetX = width * 0.5f - 0.5f;
         float offsetZ = height * 0.5f - 0.5f;
         WorldClient world = mc.world;
         BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
+        GlStateManager.disableLighting();
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         buffer.begin(7, DefaultVertexFormats.BLOCK);
         for (float[] candle : ritual.getCandles()) {
@@ -62,10 +67,7 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
             buffer.setTranslation(0, 0, 0);
         }
         tessellator.draw();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.enableLighting();
     }
 
 }
