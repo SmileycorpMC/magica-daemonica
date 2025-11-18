@@ -7,17 +7,17 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smileycorp.magiadaemonica.client.rituals.RitualClientHandler;
-import net.smileycorp.magiadaemonica.common.rituals.IRitual;
+import net.smileycorp.magiadaemonica.client.rituals.RitualsClient;
+import net.smileycorp.magiadaemonica.common.rituals.Ritual;
 import net.smileycorp.magiadaemonica.common.rituals.RitualsRegistry;
 
 public class SyncRitualMessage implements IMessage {
 
-    private IRitual ritual;
+    private Ritual ritual;
 
     public SyncRitualMessage() {}
 
-    public SyncRitualMessage(IRitual ritual) {
+    public SyncRitualMessage(Ritual ritual) {
         this.ritual = ritual;
     }
 
@@ -34,7 +34,7 @@ public class SyncRitualMessage implements IMessage {
     }
 
     public IMessage process(MessageContext ctx) {
-        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> RitualClientHandler.addRitual(ritual));
+        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> RitualsClient.getInstance().addRitual(ritual));
         return null;
     }
 

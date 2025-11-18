@@ -16,42 +16,46 @@ import net.smileycorp.magiadaemonica.common.network.SyncRitualMessage;
 
 import java.util.Map;
 
-public class WorldDataRituals extends WorldSavedData {
+public class RitualsServer extends WorldSavedData implements Rituals {
 
     public static final String DATA = Constants.MODID + "_rituals";
 
-    private final Map<BlockPos, IRitual> rituals = Maps.newHashMap();
+    private final Map<BlockPos, Ritual> rituals = Maps.newHashMap();
     private WorldServer world;
 
-    public WorldDataRituals(String data) {
+    public RitualsServer(String data) {
         super(data);
     }
 
-    public IRitual getRitual(BlockPos pos) {
-        IRitual ritual = rituals.get(pos);
+    @Override
+    public Ritual getRitual(BlockPos pos) {
+        Ritual ritual = rituals.get(pos);
         if (ritual != null) return ritual;
         return findRitual(pos);
     }
 
-    public IRitual getRitual(double x, double y, double z, double range) {
+    @Override
+    public Ritual getRitual(double x, double y, double z, double range) {
         double rangeSqr = range * range;
-        for (IRitual ritual : rituals.values()) if (ritual.getCenter().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
+        for (Ritual ritual : rituals.values()) if (ritual.getCenter().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
         return null;
     }
 
-    private IRitual findRitual(BlockPos pos) {
-        for (IRitual ritual : rituals.values()) if (ritual.contains(pos)) return ritual;
+    private Ritual findRitual(BlockPos pos) {
+        for (Ritual ritual : rituals.values()) if (ritual.contains(pos)) return ritual;
         return null;
     }
 
-    public void addRitual(IRitual ritual) {
+    @Override
+    public void addRitual(Ritual ritual) {
         rituals.put(ritual.getCenter(), ritual);
-        updateRitual(ritual);
+        syncRitual(ritual);
         markDirty();
     }
 
+    @Override
     public void removeRitual(BlockPos pos) {
-        IRitual ritual = getRitual(pos);
+        Ritual ritual = getRitual(pos);
         if (ritual == null) return;
         ritual.removeBlocks(world);
         pos = ritual.getCenter();
@@ -61,17 +65,29 @@ public class WorldDataRituals extends WorldSavedData {
                         128));
         markDirty();
     }
-    
-    public void updateRitual(IRitual ritual) {
+
+    @Override
+    public void tick() {
+        for (Ritual ritual : rituals.values()) {
+            ritual.tick(world);
+            if (ritual.isDirty()) {
+                markDirty();
+                syncRitual(ritual);
+            }
+        }
+    }
+
+    public void syncRitual(Ritual ritual) {
         BlockPos pos = ritual.getCenter();
         PacketHandler.NETWORK_INSTANCE.sendToAllTracking(new SyncRitualMessage(ritual),
                 new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 128));
+        ritual.markDirty(false);
     }
 
     public void syncRituals(Chunk chunk) {
-        for (IRitual ritual : rituals.values()) {
+        for (Ritual ritual : rituals.values()) {
             BlockPos pos = ritual.getCenter();
-            if (world.getChunkFromBlockCoords(pos) == chunk) updateRitual(ritual);
+            if (world.getChunkFromBlockCoords(pos) == chunk) syncRitual(ritual);
         }
     }
 
@@ -79,7 +95,7 @@ public class WorldDataRituals extends WorldSavedData {
     public void readFromNBT(NBTTagCompound nbt) {
         if (!nbt.hasKey("rituals")) return;
         for (NBTBase tag : nbt.getTagList("rituals", 10)) {
-            IRitual ritual = RitualsRegistry.getRitualFromNBT((NBTTagCompound) tag);
+            Ritual ritual = RitualsRegistry.getRitualFromNBT((NBTTagCompound) tag);
             if (ritual != null) rituals.put(ritual.getCenter(), ritual);
         }
     }
@@ -87,7 +103,7 @@ public class WorldDataRituals extends WorldSavedData {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         NBTTagList rituals = new NBTTagList();
-        for (IRitual ritual : this.rituals.values()) {
+        for (Ritual ritual : this.rituals.values()) {
             NBTTagCompound tag = ritual.writeToNBT();
             tag.setString("id", ritual.getID().toString());
             rituals.appendTag(tag);
@@ -96,10 +112,10 @@ public class WorldDataRituals extends WorldSavedData {
         return nbt;
     }
 
-    public static WorldDataRituals get(WorldServer world) {
-        WorldDataRituals data = (WorldDataRituals) world.getMapStorage().getOrLoadData(WorldDataRituals.class, DATA);
+    public static RitualsServer get(WorldServer world) {
+        RitualsServer data = (RitualsServer) world.getMapStorage().getOrLoadData(RitualsServer.class, DATA);
         if (data == null) {
-            data = new WorldDataRituals(DATA);
+            data = new RitualsServer(DATA);
             world.getMapStorage().setData(DATA, data);
         }
         if (data.world == null) data.world = world;

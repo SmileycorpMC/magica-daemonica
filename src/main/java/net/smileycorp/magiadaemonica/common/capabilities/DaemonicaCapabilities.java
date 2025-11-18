@@ -5,7 +5,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 
 public class DaemonicaCapabilities {
 
-	@CapabilityInject(ISoul.class)
-	public final static Capability<ISoul> SOUL = null;
+	@CapabilityInject(Soul.class)
+	public final static Capability<Soul> SOUL = null;
 	
 }

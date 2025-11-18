@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smileycorp.magiadaemonica.client.rituals.RitualClientHandler;
+import net.smileycorp.magiadaemonica.client.rituals.RitualsClient;
 
 public class RemoveRitualMessage implements IMessage {
 
@@ -29,7 +29,7 @@ public class RemoveRitualMessage implements IMessage {
     }
 
     public IMessage process(MessageContext ctx) {
-        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> RitualClientHandler.removeRitual(pos));
+        if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> RitualsClient.getInstance().removeRitual(pos));
         return null;
     }
 

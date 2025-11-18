@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.trades;
+package net.smileycorp.magiadaemonica.common.rituals.summoning;
 
 import java.util.Locale;
 

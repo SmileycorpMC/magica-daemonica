@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IRitual {
+public interface Ritual {
 
     ResourceLocation getID();
 
@@ -21,7 +21,11 @@ public interface IRitual {
 
     boolean isMirrored();
 
-    void clientTick(World world);
+    void tick(World world);
+
+    void addPower(int power);
+
+    int getPower();
 
     default boolean contains(BlockPos pos) {
         BlockPos origin = getPos();
@@ -32,6 +36,12 @@ public interface IRitual {
 
     void removeBlocks(World world);
 
+    boolean isDirty();
+
+    void markDirty(boolean dirty);
+
     NBTTagCompound writeToNBT();
+
+    boolean isActive();
 
 }

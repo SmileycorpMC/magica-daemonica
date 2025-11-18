@@ -19,7 +19,7 @@ import net.smileycorp.magiadaemonica.common.MagiaDaemonica;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockScentedCandle extends BlockBase implements ILightable {
+public class BlockScentedCandle extends BlockBase implements Lightable {
 
     public static PropertyBool LIT = PropertyBool.create("lit");
 

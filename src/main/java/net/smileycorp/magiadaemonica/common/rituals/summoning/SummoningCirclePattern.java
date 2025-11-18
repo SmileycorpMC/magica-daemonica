@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.rituals.summoningcircle;
+package net.smileycorp.magiadaemonica.common.rituals.summoning;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;

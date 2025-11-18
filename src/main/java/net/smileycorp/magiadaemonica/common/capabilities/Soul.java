@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nullable;
 
-public interface ISoul {
+public interface Soul {
 
     float getSoul();
 
@@ -16,7 +16,7 @@ public interface ISoul {
 
     void setSoul(float percent);
 
-    class Soul implements ISoul {
+    class Impl implements Soul {
 
         private float soul_percent = 1;
 
@@ -37,16 +37,16 @@ public interface ISoul {
 
     }
 
-    class Storage implements Capability.IStorage<ISoul> {
+    class Storage implements Capability.IStorage<net.smileycorp.magiadaemonica.common.capabilities.Soul> {
 
         @Nullable
         @Override
-        public NBTBase writeNBT(Capability<ISoul> capability, ISoul soul, EnumFacing enumFacing) {
+        public NBTBase writeNBT(Capability<net.smileycorp.magiadaemonica.common.capabilities.Soul> capability, net.smileycorp.magiadaemonica.common.capabilities.Soul soul, EnumFacing enumFacing) {
             return new NBTTagFloat(soul.getSoul());
         }
 
         @Override
-        public void readNBT(Capability<ISoul> capability, ISoul soul, EnumFacing enumFacing, NBTBase nbtBase) {
+        public void readNBT(Capability<net.smileycorp.magiadaemonica.common.capabilities.Soul> capability, net.smileycorp.magiadaemonica.common.capabilities.Soul soul, EnumFacing enumFacing, NBTBase nbtBase) {
             soul.setSoul(((NBTTagFloat)nbtBase).getFloat());
         }
 
@@ -54,7 +54,7 @@ public interface ISoul {
 
     class Provider implements ICapabilitySerializable<NBTBase> {
 
-        protected ISoul instance = DaemonicaCapabilities.SOUL.getDefaultInstance();
+        protected net.smileycorp.magiadaemonica.common.capabilities.Soul instance = DaemonicaCapabilities.SOUL.getDefaultInstance();
 
         @Override
         public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.smileycorp.magiadaemonica.common.blocks.BlockChalkLine;
 import net.smileycorp.magiadaemonica.common.blocks.BlockScentedCandle;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
-import net.smileycorp.magiadaemonica.common.rituals.summoningcircle.SummoningCircle;
+import net.smileycorp.magiadaemonica.common.rituals.summoning.SummoningCircle;
 
 public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> {
 
@@ -27,7 +27,7 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         GlStateManager.enableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
-        //summoning cirlce
+        //summoning circle
         int i = mc.world.getCombinedLight(ritual.getCenter(), 0);
         int j = i % 65536;
         int k = i / 65536;
@@ -36,11 +36,13 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         mc.getTextureManager().bindTexture(new ResourceLocation(name.getResourceDomain(), "textures/summoning_circles/" + name.getResourcePath() + ".png"));
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
+        float r = 1 - Math.min(ritual.getPower(), 100) * 0.0032f;
+        float gb = 1 - Math.min(ritual.getPower(), 100) * 0.01f;
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.pos(0, 0.01, 0).tex(0, 0).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
-        buffer.pos(0, 0.01 , height).tex(0, 1).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
-        buffer.pos(width, 0.01, height).tex(1, 1).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
-        buffer.pos(width, 0.01, 0).tex(1, 0).color(255, 255, 255, 255).normal(0, 1, 0).endVertex();
+        buffer.pos(0, 0.01, 0).tex(0, 0).color(r, gb, gb, 1).normal(0, 1, 0).endVertex();
+        buffer.pos(0, 0.01 , height).tex(0, 1).color(r, gb, gb, 1).normal(0, 1, 0).endVertex();
+        buffer.pos(width, 0.01, height).tex(1, 1).color(r, gb, gb, 1).normal(0, 1, 0).endVertex();
+        buffer.pos(width, 0.01, 0).tex(1, 0).color(r, gb, gb, 1).normal(0, 1, 0).endVertex();
         tessellator.draw();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);

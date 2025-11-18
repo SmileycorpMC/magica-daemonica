@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.rituals.summoningcircle;
+package net.smileycorp.magiadaemonica.common.rituals.summoning;
 
 import com.google.common.collect.Maps;
 import net.minecraft.util.ResourceLocation;
@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.smileycorp.magiadaemonica.common.Constants;
-import net.smileycorp.magiadaemonica.common.rituals.WorldDataRituals;
+import net.smileycorp.magiadaemonica.common.rituals.RitualsServer;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class SummoningCircles {
         SummoningCircle circle = findMatch(world, pos);
         if (circle == null) return;
         circle.setBlocks(world);
-        WorldDataRituals.get((WorldServer) world).addRitual(circle);
+        RitualsServer.get((WorldServer) world).addRitual(circle);
     }
 
     public static float[][] getCandles(ResourceLocation name) {

@@ -1,9 +1,9 @@
-package net.smileycorp.magiadaemonica.common.trades.prices;
+package net.smileycorp.magiadaemonica.common.rituals.summoning.trades.prices;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentBase;
-import net.smileycorp.magiadaemonica.common.trades.TradeUtils;
+import net.smileycorp.magiadaemonica.common.rituals.summoning.trades.TradeUtils;
 
 public class FlatHealthPrice implements Price {
 

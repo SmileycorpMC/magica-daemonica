@@ -1,4 +1,4 @@
-package net.smileycorp.magiadaemonica.common.rituals.summoningcircle;
+package net.smileycorp.magiadaemonica.common.rituals.summoning;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.blocks.BlockChalkLine;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
-import net.smileycorp.magiadaemonica.common.rituals.IRitual;
+import net.smileycorp.magiadaemonica.common.rituals.Ritual;
 import net.smileycorp.magiadaemonica.common.rituals.Rotation;
 
 import java.util.Random;
 
-public class SummoningCircle implements IRitual {
+public class SummoningCircle implements Ritual {
 
     public static final ResourceLocation ID = Constants.loc("summoning_circle");
 
@@ -27,6 +27,9 @@ public class SummoningCircle implements IRitual {
     private final float[][] candles;
     private boolean mirror;
     private Rotation rotation = Rotation.NORTH;
+    private boolean isDirty;
+    private int power = 0;
+    private boolean active = false;
 
     public SummoningCircle(ResourceLocation name, BlockPos pos, int width, int height) {
         this.pos = pos;
@@ -60,6 +63,16 @@ public class SummoningCircle implements IRitual {
                 world.setBlockState(mutable, state.withProperty(BlockChalkLine.ACTIVE, false));
             }
         }
+    }
+
+    @Override
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    @Override
+    public void markDirty(boolean dirty) {
+        isDirty = dirty;
     }
 
     public void mirror() {
@@ -114,18 +127,33 @@ public class SummoningCircle implements IRitual {
     }
 
     @Override
-    public void clientTick(World world) {
-        Random rand = world.rand;
-        for (float[] candle : candles) {
-            candle = rotation.apply(candle);
-            if (mirror) for (int i = 0; i < 2; i++) candle[i] = -candle[i];
-            IBlockState state = world.getBlockState( new BlockPos(center.addVector(candle[0], 0, candle[1])));
-            if (state.getBlock() != DaemonicaBlocks.CHALK_LINE) continue;
-            if (state.getValue(BlockChalkLine.CANDLE) != BlockChalkLine.Candle.LIT) continue;
-            world.spawnParticle(EnumParticleTypes.FLAME, center.x + candle[0], center.y + 0.6, center.z + candle[1], 0, 0, 0);
-            if (rand.nextInt(4) == 0) world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, center.x + candle[0] + (rand.nextFloat() - 0.5) * 0.05,
-                    center.y + 0.6,  center.z + candle[1] + (rand.nextFloat() - 0.5) * 0.05, 0, 0, 0);
+    public void tick(World world) {
+        if (world.isRemote) {
+            Random rand = world.rand;
+            for (float[] candle : candles) {
+                candle = rotation.apply(candle);
+                if (mirror) for (int i = 0; i < 2; i++) candle[i] = -candle[i];
+                IBlockState state = world.getBlockState(new BlockPos(center.addVector(candle[0], 0, candle[1])));
+                if (state.getBlock() != DaemonicaBlocks.CHALK_LINE) continue;
+                if (state.getValue(BlockChalkLine.CANDLE) != BlockChalkLine.Candle.LIT) continue;
+                world.spawnParticle(EnumParticleTypes.FLAME, center.x + candle[0], center.y + 0.6, center.z + candle[1], 0, 0, 0);
+                if (rand.nextInt(4) == 0)
+                    world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, center.x + candle[0] + (rand.nextFloat() - 0.5) * 0.05,
+                            center.y + 0.6, center.z + candle[1] + (rand.nextFloat() - 0.5) * 0.05, 0, 0, 0);
+            }
+            return;
         }
+    }
+
+    @Override
+    public void addPower(int power) {
+        this.power += power;
+        isDirty = true;
+    }
+
+    @Override
+    public int getPower() {
+        return power;
     }
 
     @Override
@@ -137,14 +165,26 @@ public class SummoningCircle implements IRitual {
         nbt.setString("name", name.toString());
         nbt.setByte("rotation", (byte) rotation.ordinal());
         nbt.setBoolean("mirror", mirror);
+        nbt.setBoolean("active", active);
+        System.out.println(power);
+        nbt.setInteger("power", power);
+        System.out.println(nbt);
         return nbt;
     }
 
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
     public static SummoningCircle fromNBT(NBTTagCompound nbt) {
+        System.out.println(nbt);
         SummoningCircle circle = new SummoningCircle(new ResourceLocation(nbt.getString("name")),
                 NBTUtil.getPosFromTag(nbt.getCompoundTag("pos")), nbt.getInteger("width"), nbt.getInteger("height"));
         circle.setRotation(Rotation.values()[nbt.getByte("rotation")]);
-        if (nbt.getBoolean("mirror")) circle.mirror();
+        circle.mirror = nbt.getBoolean("mirror");
+        circle.active = nbt.getBoolean("active");
+        circle.power = nbt.getInteger("power");
         return circle;
     }
 

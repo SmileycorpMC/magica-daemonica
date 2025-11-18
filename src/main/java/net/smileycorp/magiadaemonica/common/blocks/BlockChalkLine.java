@@ -23,12 +23,12 @@ import net.smileycorp.atlas.api.block.BlockBase;
 import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.MagiaDaemonica;
 import net.smileycorp.magiadaemonica.common.items.DaemonicaItems;
-import net.smileycorp.magiadaemonica.common.rituals.WorldDataRituals;
-import net.smileycorp.magiadaemonica.common.rituals.summoningcircle.SummoningCircles;
+import net.smileycorp.magiadaemonica.common.rituals.RitualsServer;
+import net.smileycorp.magiadaemonica.common.rituals.summoning.SummoningCircles;
 
 import java.util.Random;
 
-public class BlockChalkLine extends BlockBase implements ILightable {
+public class BlockChalkLine extends BlockBase implements Lightable {
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool EAST = PropertyBool.create("east");
@@ -62,7 +62,7 @@ public class BlockChalkLine extends BlockBase implements ILightable {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (world.isRemote) return;
-        if (state.getValue(ACTIVE)) WorldDataRituals.get((WorldServer) world).removeRitual(pos);
+        if (state.getValue(ACTIVE)) RitualsServer.get((WorldServer) world).removeRitual(pos);
         if (state.getValue(CANDLE) == Candle.NONE) return;
         EntityItem entityitem = new EntityItem(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f,
                 new ItemStack(DaemonicaBlocks.SCENTED_CANDLE));

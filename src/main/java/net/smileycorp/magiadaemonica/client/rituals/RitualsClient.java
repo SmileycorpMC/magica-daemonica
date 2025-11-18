@@ -10,16 +10,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.smileycorp.magiadaemonica.client.rituals.renderers.RitualRenderer;
 import net.smileycorp.magiadaemonica.client.rituals.renderers.SummoningCircleRenderer;
-import net.smileycorp.magiadaemonica.common.rituals.IRitual;
-import net.smileycorp.magiadaemonica.common.rituals.summoningcircle.SummoningCircle;
+import net.smileycorp.magiadaemonica.common.rituals.Ritual;
+import net.smileycorp.magiadaemonica.common.rituals.Rituals;
+import net.smileycorp.magiadaemonica.common.rituals.summoning.SummoningCircle;
 
 import java.util.Map;
 import java.util.Set;
 
-public class RitualClientHandler {
+public class RitualsClient implements Rituals {
 
     private static final Map<ResourceLocation, RitualRenderer> RENDERERS = Maps.newHashMap();
-    private static final Map<BlockPos, IRitual> rituals = Maps.newHashMap();
+    private static RitualsClient instance;
+    private final Map<BlockPos, Ritual> rituals = Maps.newHashMap();
 
     static {
         registerRitualRenderer(SummoningCircle.ID, new SummoningCircleRenderer());
@@ -29,28 +31,63 @@ public class RitualClientHandler {
         RENDERERS.put(id, renderer);
     }
 
-    public static void renderRituals() {
+    @Override
+    public Ritual getRitual(BlockPos pos) {
+        Ritual ritual = rituals.get(pos);
+        if (ritual != null) return ritual;
+        return findRitual(pos);
+    }
+
+    @Override
+    public Ritual getRitual(double x, double y, double z, double range) {
+        double rangeSqr = range * range;
+        for (Ritual ritual : rituals.values()) if (ritual.getCenter().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
+        return null;
+    }
+
+    private Ritual findRitual(BlockPos pos) {
+        for (Ritual ritual : rituals.values()) if (ritual.contains(pos)) return ritual;
+        return null;
+    }
+
+    @Override
+    public void addRitual(Ritual ritual) {
+        if (ritual == null) return;
+        rituals.put(ritual.getCenter(), ritual);
+    }
+
+    @Override
+    public void removeRitual(BlockPos pos) {
+        rituals.remove(pos);
+    }
+
+    @Override
+    public void tick() {
+        Set<BlockPos> toRemove = Sets.newHashSet();
         WorldClient world = Minecraft.getMinecraft().world;
-        for (IRitual ritual : rituals.values()) {
+        for (Ritual ritual : rituals.values()) {
+            if (!world.isBlockLoaded(ritual.getCenter())) {
+                toRemove.add(ritual.getCenter());
+                continue;
+            }
+            ritual.tick(world);
+        }
+        for (BlockPos pos : toRemove) rituals.remove(pos);
+    }
+
+    public void clear() {
+        rituals.clear();
+    }
+
+    public void renderRituals() {
+        WorldClient world = Minecraft.getMinecraft().world;
+        for (Ritual ritual : rituals.values()) {
             if (!world.isBlockLoaded(ritual.getCenter())) continue;
             renderRitual(ritual);
         }
     }
 
-    public static void addRitual(IRitual ritual) {
-        if (ritual == null) return;
-        rituals.put(ritual.getCenter(), ritual);
-    }
-
-    public static void removeRitual(BlockPos pos) {
-        rituals.remove(pos);
-    }
-
-    public static void clear() {
-        rituals.clear();
-    }
-
-    public static void renderRitual(IRitual ritual) {
+    public void renderRitual(Ritual ritual) {
         if (ritual == null) return;
         RitualRenderer renderer = RENDERERS.get(ritual.getID());
         if (renderer == null) return;
@@ -65,7 +102,7 @@ public class RitualClientHandler {
         GlStateManager.popMatrix();
     }
 
-    public static void applyTransformations(IRitual ritual) {
+    public void applyTransformations(Ritual ritual) {
         BlockPos pos = ritual.getPos();
         int width = ritual.getWidth();
         int height = ritual.getHeight();
@@ -88,17 +125,9 @@ public class RitualClientHandler {
         }
     }
 
-    public static void clientTick() {
-        Set<BlockPos> toRemove = Sets.newHashSet();
-        WorldClient world = Minecraft.getMinecraft().world;
-        for (IRitual ritual : rituals.values()) {
-            if (!world.isBlockLoaded(ritual.getCenter())) {
-                toRemove.add(ritual.getCenter());
-                continue;
-            }
-            ritual.clientTick(world);
-        }
-        for (BlockPos pos : toRemove) rituals.remove(pos);
+    public static RitualsClient getInstance() {
+        if (instance == null) instance = new RitualsClient();
+        return instance;
     }
 
 }
