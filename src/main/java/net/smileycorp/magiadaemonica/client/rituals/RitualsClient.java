@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.smileycorp.magiadaemonica.client.rituals.renderers.RitualRenderer;
 import net.smileycorp.magiadaemonica.client.rituals.renderers.SummoningCircleRenderer;
 import net.smileycorp.magiadaemonica.common.rituals.Ritual;
@@ -44,7 +45,7 @@ public class RitualsClient implements Rituals {
     @Override
     public Ritual getRitual(double x, double y, double z, double range) {
         double rangeSqr = range * range;
-        for (Ritual ritual : rituals.values()) if (ritual.getCenter().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
+        for (Ritual ritual : rituals.values()) if (ritual.getCenterPos().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
         return null;
     }
 
@@ -56,7 +57,7 @@ public class RitualsClient implements Rituals {
     @Override
     public void addRitual(Ritual ritual) {
         if (ritual == null) return;
-        rituals.put(ritual.getCenter(), ritual);
+        rituals.put(ritual.getCenterPos(), ritual);
     }
 
     public void addRitual(BlockPos pos, NBTTagCompound nbt) {
@@ -67,7 +68,7 @@ public class RitualsClient implements Rituals {
             return;
         }
         ritual = RitualsRegistry.getRitualFromNBT(nbt);
-        rituals.put(ritual.getCenter(), ritual);
+        rituals.put(ritual.getCenterPos(), ritual);
     }
 
     @Override
@@ -80,8 +81,8 @@ public class RitualsClient implements Rituals {
         Set<BlockPos> toRemove = Sets.newHashSet();
         WorldClient world = Minecraft.getMinecraft().world;
         for (Ritual ritual : rituals.values()) {
-            if (!world.isBlockLoaded(ritual.getCenter())) {
-                toRemove.add(ritual.getCenter());
+            if (!world.isBlockLoaded(ritual.getCenterPos())) {
+                toRemove.add(ritual.getCenterPos());
                 continue;
             }
             ritual.tick(world);
@@ -103,7 +104,7 @@ public class RitualsClient implements Rituals {
         WorldClient world = mc.world;
         float partialTicks = mc.getRenderPartialTicks();
         for (Ritual ritual : rituals.values()) {
-            if (!world.isBlockLoaded(ritual.getCenter())) continue;
+            if (!world.isBlockLoaded(ritual.getCenterPos())) continue;
             RitualRenderer renderer = RENDERERS.get(ritual.getID());
             if (renderer == null) continue;
             int width = ritual.getWidth();
@@ -119,24 +120,19 @@ public class RitualsClient implements Rituals {
     }
 
     public void applyTransformations(Ritual ritual) {
-        BlockPos pos = ritual.getPos();
-        int width = ritual.getWidth();
-        int height = ritual.getHeight();
-        GlStateManager.translate(pos.getX() - TileEntityRendererDispatcher.staticPlayerX,
-                pos.getY() - TileEntityRendererDispatcher.staticPlayerY,
-                pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ);
+        Vec3d pos = ritual.getCenter();
+        GlStateManager.translate(pos.x - TileEntityRendererDispatcher.staticPlayerX,
+                pos.y - TileEntityRendererDispatcher.staticPlayerY,
+                pos.z - TileEntityRendererDispatcher.staticPlayerZ);
         switch (ritual.getRotation()) {
             case EAST:
                 GlStateManager.rotate(90, 0, 1, 0);
-                GlStateManager.translate(-width, 0, 0);
                 break;
             case SOUTH:
                 GlStateManager.rotate(180, 0, 1, 0);
-                GlStateManager.translate(-width, 0, -height);
                 break;
             case WEST:
                 GlStateManager.rotate(-90, 0, 1, 0);
-                GlStateManager.translate(0, 0, -height);
                 break;
         }
     }

@@ -100,8 +100,8 @@ public class SummoningCircle implements Ritual {
     }
 
     @Override
-    public BlockPos getCenter() {
-        return new BlockPos(center);
+    public Vec3d getCenter() {
+        return center;
     }
 
     @Override
@@ -144,23 +144,13 @@ public class SummoningCircle implements Ritual {
                     world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, center.x + candle[0] + (rand.nextFloat() - 0.5) * 0.05,
                             center.y + 0.6, center.z + candle[1] + (rand.nextFloat() - 0.5) * 0.05, 0, 0, 0);
             }
-            if (ticksActive > 100) {
-                int r = width/2;
-                for (int i = 0; i < rand.nextInt(3); i++) {
-                    Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-                    world.spawnParticle(EnumParticleTypes.FLAME, center.x + dir.x * r, center.y + 0.05, center.z + dir.z * r, 0, 0, 0);
-                }
-                for (int i = 0; i < rand.nextInt(3) + 2; i++) {
-                    Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-                    float magnitude = rand.nextFloat() * r;
-                    world.spawnParticle(EnumParticleTypes.FLAME, center.x + dir.x * magnitude, center.y + 0.05, center.z + dir.z * magnitude, 0, 0, 0);
-                }
-            }
+            if (ticksActive > 80 && ticksActive < 200) spawnParticles(world, EnumParticleTypes.SMOKE_NORMAL);
+            if (ticksActive > 200) spawnParticles(world, EnumParticleTypes.FLAME);
             return;
         }
         if (!active) return;
         //if (ticksActive == 3) world.setBlockState(new BlockPos(center), Blocks.FIRE.getDefaultState());
-        if (ticksActive == 40) {
+        if (ticksActive == 80) {
             world.setBlockState(new BlockPos(center), Blocks.AIR.getDefaultState());
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(pos);
             for (float[] candle : candles) {
@@ -171,9 +161,9 @@ public class SummoningCircle implements Ritual {
             }
             world.playSound(null, center.x, center.y, center.z, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.HOSTILE, 0.75f, 1);
             for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, player -> player.getDistanceSq(center.x, center.y, center.z) <= 256))
-                player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 1, true, true));
+                player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 140, 4, true, true));
         }
-        if (ticksActive == 100) {
+        if (ticksActive == 200) {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(pos);
             for (float[] candle : candles) {
                 candle = rotation.apply(candle);
@@ -182,10 +172,24 @@ public class SummoningCircle implements Ritual {
                 world.setBlockState(mutable, world.getBlockState(mutable).withProperty(BlockChalkLine.CANDLE, BlockChalkLine.Candle.LIT));
             }
         }
-        if (ticksActive > 100 && ticksActive % 40 == 0)
+        if (ticksActive > 200 && ticksActive % 40 == 0)
             world.playSound(null, center.x, center.y, center.z, SoundEvents.ENTITY_GUARDIAN_ATTACK, SoundCategory.HOSTILE, 0.75f, 1);
         ticksActive++;
         isDirty = true;
+    }
+
+    private void spawnParticles(World world, EnumParticleTypes type) {
+        Random rand = world.rand;
+        int r = width/2;
+        for (int i = 0; i < rand.nextInt(3); i++) {
+            Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(world.rand);
+            world.spawnParticle(type, center.x + dir.x * r, center.y + 0.05, center.z + dir.z * r, 0, 0, 0);
+        }
+        for (int i = 0; i < rand.nextInt(3) + 2; i++) {
+            Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(world.rand);
+            float magnitude = rand.nextFloat() * r;
+            world.spawnParticle(type, center.x + dir.x * magnitude, center.y + 0.05, center.z + dir.z * magnitude, 0, 0.01 * (r - magnitude), 0);
+        }
     }
 
     @Override

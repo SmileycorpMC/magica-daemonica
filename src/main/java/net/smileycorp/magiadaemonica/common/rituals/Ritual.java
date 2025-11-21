@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public interface Ritual {
@@ -12,7 +13,11 @@ public interface Ritual {
 
     BlockPos getPos();
 
-    BlockPos getCenter();
+    default BlockPos getCenterPos() {
+        return new BlockPos(getCenter());
+    }
+
+    Vec3d getCenter();
 
     int getWidth();
 

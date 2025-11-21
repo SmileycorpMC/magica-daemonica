@@ -38,7 +38,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
     @Override
     public Ritual getRitual(double x, double y, double z, double range) {
         double rangeSqr = range * range;
-        for (Ritual ritual : rituals.values()) if (ritual.getCenter().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
+        for (Ritual ritual : rituals.values()) if (ritual.getCenterPos().distanceSqToCenter(x, y, z) <= rangeSqr) return ritual;
         return null;
     }
 
@@ -49,7 +49,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
 
     @Override
     public void addRitual(Ritual ritual) {
-        rituals.put(ritual.getCenter(), ritual);
+        rituals.put(ritual.getCenterPos(), ritual);
         syncRitual(ritual);
         markDirty();
     }
@@ -59,7 +59,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
         Ritual ritual = getRitual(pos);
         if (ritual == null) return;
         ritual.removeBlocks(world);
-        pos = ritual.getCenter();
+        pos = ritual.getCenterPos();
         rituals.remove(pos);
         PacketHandler.NETWORK_INSTANCE.sendToAllTracking(new RemoveRitualMessage(pos),
                 new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(),
@@ -84,7 +84,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
     }
 
     public void syncRitual(Ritual ritual) {
-        BlockPos pos = ritual.getCenter();
+        BlockPos pos = ritual.getCenterPos();
         PacketHandler.NETWORK_INSTANCE.sendToAllTracking(new SyncRitualMessage(pos, ritual),
                 new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 128));
         ritual.markDirty(false);
@@ -92,7 +92,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
 
     public void syncRituals(Chunk chunk) {
         for (Ritual ritual : rituals.values()) {
-            BlockPos pos = ritual.getCenter();
+            BlockPos pos = ritual.getCenterPos();
             if (world.getChunkFromBlockCoords(pos) == chunk) syncRitual(ritual);
         }
     }
@@ -102,7 +102,7 @@ public class RitualsServer extends WorldSavedData implements Rituals {
         if (!nbt.hasKey("rituals")) return;
         for (NBTBase tag : nbt.getTagList("rituals", 10)) {
             Ritual ritual = RitualsRegistry.getRitualFromNBT((NBTTagCompound) tag);
-            if (ritual != null) rituals.put(ritual.getCenter(), ritual);
+            if (ritual != null) rituals.put(ritual.getCenterPos(), ritual);
         }
     }
 

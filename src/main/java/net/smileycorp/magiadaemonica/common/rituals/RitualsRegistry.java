@@ -33,7 +33,7 @@ public class RitualsRegistry {
         for (Ritual ritual : Rituals.get(player.world).getRituals()) {
             if (!ritual.getID().equals(ritualType)) continue;
             int disSqr = ((ritual.getWidth() / 2) + 2) * ((ritual.getHeight() / 2) + 2);
-            if (ritual.getCenter().distanceSqToCenter(player.posX, player.posY, player.posZ) > disSqr) continue;
+            if (ritual.getCenterPos().distanceSqToCenter(player.posX, player.posY, player.posZ) > disSqr) continue;
             ritual.processInvocation(player, invocation);
         }
     }
