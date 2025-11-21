@@ -10,12 +10,15 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.smileycorp.magiadaemonica.common.Constants;
 import net.smileycorp.magiadaemonica.common.blocks.BlockChalkLine;
 import net.smileycorp.magiadaemonica.common.blocks.BlockScentedCandle;
 import net.smileycorp.magiadaemonica.common.blocks.DaemonicaBlocks;
 import net.smileycorp.magiadaemonica.common.rituals.summoning.SummoningCircle;
 
 public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> {
+
+    private static final ResourceLocation SUMMONING_RUNES = Constants.loc("textures/summoning_circles/summoning_runes.png");
 
     @Override
     public void render(SummoningCircle ritual, float partialTicks) {
@@ -38,6 +41,7 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
             GlStateManager.disableTexture2D();
             GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
         }
+        GlStateManager.enableFog();
         //summoning circle
         float r;
         float g;
@@ -56,14 +60,23 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         }
         GlStateManager.color(1, 1, 1, 1);
         textureManager.bindTexture(new ResourceLocation(name.getResourceDomain(), "textures/summoning_circles/" + name.getResourcePath() + ".png"));
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.pos(-w, 0.01, -h).tex(0, 0).color(r, g, b, 1).normal(0, 1, 0).endVertex();
-        buffer.pos(-w, 0.01, h).tex(0, 1).color(r, g, b, 1).normal(0, 1, 0).endVertex();
-        buffer.pos(w, 0.01, h).tex(1, 1).color(r, g, b, 1).normal(0, 1, 0).endVertex();
-        buffer.pos(w, 0.01, -h).tex(1, 0).color(r, g, b, 1).normal(0, 1, 0).endVertex();
-        tessellator.draw();
+        renderPlane(-w, 0.01, -h, w, 0.01, h, r, g, b, 1, false);
+        //runes
+        if (!hasLighting) {
+            GlStateManager.enableBlend();
+            textureManager.bindTexture(SUMMONING_RUNES);
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            float t = ritual.getTicksActive() + partialTicks;
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(MathHelper.wrapDegrees(t * 18), 0, 1, 0);
+            renderPlane(-w - 0.25, 0.5, -h -0.25, w + 0.25, 4, h + 0.25,  0.678f, 0, 0, 0.5f, true);
+            GlStateManager.popMatrix();
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(MathHelper.wrapDegrees(-t * 20), 0, 1, 0);
+            renderPlane(-w - 1, 0.5, -h -1, w + 1, 4, h + 1,  0.678f, 0, 0, 0.5f, true);
+            GlStateManager.popMatrix();
+            GlStateManager.disableBlend();
+        }
         if (hasLighting) {
             RenderHelper.disableStandardItemLighting();
             GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
@@ -75,6 +88,8 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
         GlStateManager.disableLighting();
         textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.BLOCK);
         for (float[] candle : ritual.getCandles()) {
             BlockPos pos = ritual.getCenterPos().add(candle[0], 0, candle[1]);
@@ -88,6 +103,7 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         }
         buffer.setTranslation(0, 0, 0);
         tessellator.draw();
+        GlStateManager.disableFog();
         GlStateManager.enableLighting();
     }
 
