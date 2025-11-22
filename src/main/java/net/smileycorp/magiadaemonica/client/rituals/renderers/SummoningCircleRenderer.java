@@ -25,6 +25,8 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         ResourceLocation name = ritual.getName();
         if (name == null) return;
         Minecraft mc = Minecraft.getMinecraft();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
         TextureManager textureManager = mc.getTextureManager();
         boolean hasLighting = ritual.getTicksActive() <= 200;
         float w = ritual.getWidth() * 0.5f;
@@ -88,11 +90,10 @@ public class SummoningCircleRenderer implements RitualRenderer<SummoningCircle> 
         BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
         GlStateManager.disableLighting();
         textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.BLOCK);
         for (float[] candle : ritual.getCandles()) {
-            BlockPos pos = ritual.getCenterPos().add(candle[0], 0, candle[1]);
+            float[] rotated = ritual.getRotation().apply(candle);
+            BlockPos pos = new BlockPos(ritual.getCenter().addVector(rotated[0], 0, rotated[1]));
             IBlockState state = world.getBlockState(pos);
             boolean lit = false;
             if (state.getBlock() == DaemonicaBlocks.CHALK_LINE)
